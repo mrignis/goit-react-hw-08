@@ -1,10 +1,10 @@
 import React from "react";
 import { AppBar } from "./AppBar";
-import Navigation from "./Navigation";
-import AuthNav from "./AuthNav";
-import UserMenu from "./UserMenu";
+import { useSelector } from "react-redux";
+import Navigation from "./Navigation/Navigation";
+import AuthNav from "./AuthNav/AuthNav";
 
-function Layout() {
+const Layout = ({ children }) => {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
   return (
@@ -13,8 +13,9 @@ function Layout() {
         <Navigation />
         {isLoggedIn ? <UserMenu /> : <AuthNav />}
       </AppBar>
+      {isLoggedIn ? <div>{children}</div> : <div>Please login or register</div>}
     </div>
   );
-}
+};
 
 export default Layout;

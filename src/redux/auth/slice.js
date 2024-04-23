@@ -1,6 +1,16 @@
 // auth/slice.js
 import { createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
 
+const setAuthHeader = (token) => {
+  axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+};
+
+const clearAuthHeader = () => {
+  axios.defaults.headers.common.Authorization = "";
+};
+
+axios.defaults.baseURL = "https://connections-api.herokuapp.com/";
 const initialState = {
   user: {
     name: null,
