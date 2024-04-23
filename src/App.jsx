@@ -1,14 +1,18 @@
-import React, { useEffect } from "react";
+import React, { useEffect, lazy, Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { refreshUser, register, logIn, logOut } from "./redux/auth/operations";
 import { selectIsLoggedIn } from "./redux/auth/selectors";
-import HomePage from "./pages/HomePage/HomePage";
-import LoginPage from "./pages/LoginPage/LoginPage";
-import RegistrationPage from "./pages/RegistrationPage/RegistrationPage";
-import ContactsPage from "./pages/ContactsPage/ContactsPage";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import RestrictedRoute from "./components/RestrictedRoute/RestrictedRoute";
+
+// Замінюємо прямі імпорти на ліниві
+const HomePage = lazy(() => import("./pages/HomePage/HomePage"));
+const LoginPage = lazy(() => import("./pages/LoginPage/LoginPage"));
+const RegistrationPage = lazy(() =>
+  import("./pages/RegistrationPage/RegistrationPage")
+);
+const ContactsPage = lazy(() => import("./pages/ContactsPage/ContactsPage"));
 
 function App() {
   const dispatch = useDispatch();
@@ -33,32 +37,46 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route exact path="/" element={<HomePage />} />
+        <Route
+          exact
+          path="/"
+          element={
+            <Suspense fallback={<div>Loading...</div>}>
+              <HomePage />
+            </Suspense>
+          }
+        />
         <Route
           path="/register"
           element={
-            <RestrictedRoute
-              isLoggedIn={isLoggedIn}
-              component={<RegistrationPage onSubmit={handleRegister} />}
-            />
+            <Suspense fallback={<div>Loading...</div>}>
+              <RestrictedRoute
+                isLoggedIn={isLoggedIn}
+                component={<RegistrationPage onSubmit={handleRegister} />}
+              />
+            </Suspense>
           }
         />
         <Route
           path="/login"
           element={
-            <RestrictedRoute
-              isLoggedIn={isLoggedIn}
-              component={<LoginPage onSubmit={handleLogin} />}
-            />
+            <Suspense fallback={<div>Loading...</div>}>
+              <RestrictedRoute
+                isLoggedIn={isLoggedIn}
+                component={<LoginPage onSubmit={handleLogin} />}
+              />
+            </Suspense>
           }
         />
         <Route
           path="/contacts"
           element={
-            <PrivateRoute
-              isLoggedIn={isLoggedIn}
-              component={<ContactsPage onLogout={handleLogout} />}
-            />
+            <Suspense fallback={<div>Loading...</div>}>
+              <PrivateRoute
+                isLoggedIn={isLoggedIn}
+                component={<ContactsPage onLogout={handleLogout} />}
+              />
+            </Suspense>
           }
         />
       </Routes>
