@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { addContact } from "../../redux/contactsOps";
+import { addContact } from "../../redux/contacts/operations";
 import styles from "./ContactForm.module.css";
 
 const ContactForm = () => {
@@ -12,10 +12,8 @@ const ContactForm = () => {
     e.preventDefault();
     if (!name.trim() || !phoneNumber.trim()) return;
 
-    // Додаємо новий контакт на бекенд
     dispatch(addContact({ name, phoneNumber }));
 
-    // Очищаємо поля форми
     setName("");
     setPhoneNumber("");
   };

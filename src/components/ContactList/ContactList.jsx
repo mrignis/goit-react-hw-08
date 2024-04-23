@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteContact, fetchContacts } from "../../redux/contactsOps";
+import { deleteContact, fetchContacts } from "../../redux/contacts/operations";
 import Contact from "../Contact/Contact";
-import { selectFilteredContacts } from "../../redux/contactsSlice";
-import { changeFilter } from "../../redux/filtersSlice";
-import { selectNameFilter } from "../../redux/filtersSlice"; // Імпорт селектора для отримання значення фільтру
+import { selectContactsFilter } from "../../redux/contacts/selectors";
 
+import { changeFilter } from "../../redux/filters/slice";
+import { selectNameFilter } from "../../redux/filters/selectors";
 import styles from "./ContactList.module.css";
 
 const ContactList = () => {
   const dispatch = useDispatch();
   const filteredContacts = useSelector(selectFilteredContacts);
-  const nameFilter = useSelector(selectNameFilter); // Отримання значення фільтру по імені
+  const nameFilter = useSelector(selectNameFilter);
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleDeleteContact = (contactId) => {
@@ -21,8 +21,8 @@ const ContactList = () => {
   const handleChange = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
-    dispatch(changeFilter({ name: value })); // Встановлюємо фільтр в Redux store
-    dispatch(fetchContacts()); // Отримуємо контакти знову з урахуванням нового фільтру
+    dispatch(changeFilter({ name: value }));
+    dispatch(fetchContacts());
   };
 
   return (
@@ -30,7 +30,7 @@ const ContactList = () => {
       <input
         type="text"
         value={searchTerm}
-        onChange={handleChange} // Викликаємо handleChange при зміні значення поля вводу
+        onChange={handleChange}
         placeholder="Search contacts..."
         className={styles.searchInput}
       />

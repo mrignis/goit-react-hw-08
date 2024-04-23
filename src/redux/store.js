@@ -1,10 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
-import contactsReducer from "./contactsSlice";
-import filtersReducer from "./filtersSlice"; // Імпорт редюсера фільтрів
+import contactsReducer from "../redux/contacts/slice";
+import filtersReducer from "../redux/filters/slice";
+import authReducer from "../redux/auth/slice"; // Імпорт редуктора авторизації
 
 export const store = configureStore({
   reducer: {
     contacts: contactsReducer,
-    filters: filtersReducer, // Додайте редюсер фільтрів до кореневого редюсера
+    filters: filtersReducer,
+    auth: authReducer, // Додайте редуктор авторизації до кореневого редуктора
   },
 });
