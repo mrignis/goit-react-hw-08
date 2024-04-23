@@ -1,31 +1,13 @@
-import React from "react";
+import { RegisterForm } from "../../components/Form/RegisterFrom";
+import { Helmet } from "react-helmet-async";
 
-const RegistrationPage = () => {
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Ваша логіка обробки поданої форми реєстрації тут
-  };
-
+export default function Register() {
   return (
     <div>
-      <h1>Registration Page</h1>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Ім'я:
-          <input type="text" />
-        </label>
-        <label>
-          Email:
-          <input type="email" />
-        </label>
-        <label>
-          Пароль:
-          <input type="password" />
-        </label>
-        <button type="submit">Зареєструватися</button>
-      </form>
+      <Helmet>
+        <title>Registration</title>
+      </Helmet>
+      <RegisterForm />
     </div>
   );
-};
-
-export default RegistrationPage;
+}

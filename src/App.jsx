@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { refreshUser } from "./redux/auth/operations";
+import { refreshUser, register, logIn, logOut } from "./redux/auth/operations";
 import { selectIsLoggedIn } from "./redux/auth/selectors";
 import HomePage from "./pages/HomePage/HomePage";
 import LoginPage from "./pages/LoginPage/LoginPage";
@@ -18,6 +18,18 @@ function App() {
     dispatch(refreshUser());
   }, [dispatch]);
 
+  const handleRegister = (credentials) => {
+    dispatch(register(credentials));
+  };
+
+  const handleLogin = (credentials) => {
+    dispatch(logIn(credentials));
+  };
+
+  const handleLogout = () => {
+    dispatch(logOut());
+  };
+
   return (
     <Router>
       <Routes>
@@ -27,20 +39,26 @@ function App() {
           element={
             <RestrictedRoute
               isLoggedIn={isLoggedIn}
-              component={RegistrationPage}
+              component={<RegistrationPage onSubmit={handleRegister} />}
             />
           }
         />
         <Route
           path="/login"
           element={
-            <RestrictedRoute isLoggedIn={isLoggedIn} component={LoginPage} />
+            <RestrictedRoute
+              isLoggedIn={isLoggedIn}
+              component={<LoginPage onSubmit={handleLogin} />}
+            />
           }
         />
         <Route
           path="/contacts"
           element={
-            <PrivateRoute isLoggedIn={isLoggedIn} component={ContactsPage} />
+            <PrivateRoute
+              isLoggedIn={isLoggedIn}
+              component={<ContactsPage onLogout={handleLogout} />}
+            />
           }
         />
       </Routes>

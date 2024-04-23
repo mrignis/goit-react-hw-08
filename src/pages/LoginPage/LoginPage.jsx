@@ -1,32 +1,13 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
+import { Helmet } from "react-helmet";
 import { LoginForm } from "../../components/Form/LoginForm";
-import { selectIsLoggedIn } from "../../redux/auth/selectors";
 
-axios.defaults.baseURL = "https://connections-api.herokuapp.com";
-
-function LoginPage() {
-  const dispatch = useDispatch();
-  const isLoggedIn = useSelector(selectIsLoggedIn);
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      redirectToHome();
-    }
-  }, [isLoggedIn]);
-
-  const redirectToHome = () => {
-    // Заменяем использование useHistory на window.location.href
-    window.location.href = "/";
-  };
-
+export default function Login() {
   return (
     <div>
-      <h2>Login Page</h2>
+      <Helmet>
+        <title>Login</title>
+      </Helmet>
       <LoginForm />
     </div>
   );
 }
-
-export default LoginPage;
