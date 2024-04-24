@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Audio } from "react-loader-spinner";
-import Contact from "../../components/Contact/Contact";
+import ContactForm from "../../components/ContactForm/ContactForm";
 import ContactList from "../../components/ContactList/ContactList";
 import { fetchContacts } from "../../redux/contacts/operations";
 import { selectIsLoading, selectError } from "../../redux/contacts/selectors";
+import { contactsSlice } from "../../redux/contacts/slice";
 
 function ContactsPage() {
   const dispatch = useDispatch();
@@ -18,7 +19,7 @@ function ContactsPage() {
   return (
     <div>
       <h1>Сторінка контактів</h1>
-      <Contact />
+      <ContactForm />
       <h2>Contacts</h2>
       {isLoading && !error ? (
         <div

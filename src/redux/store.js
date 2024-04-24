@@ -1,64 +1,34 @@
-import { createSlice, configureStore } from "@reduxjs/toolkit";
-import { apiRegister, apiLogin, apiRefreshUser, setToken } from "./auth/slice";
-import { persistStore } from "redux-persist";
+import { configureStore } from "@reduxjs/toolkit";
+import {
+  persistStore,
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from "redux-persist";
+import storage from "redux-persist/lib/storage";
 
-const authPeristConfig = {
-  key: "auth",
-  storage: localStorage, // Ось тут ви вказуєте, що використовуєте localStorage
-  whitelist: ["token"],
+import rootReducer from "./rootReducer"; // Поправив цей імпорт на ваш кореневий редюсер
+
+const persistConfig = {
+  key: "root",
+  storage,
+  whitelist: ["auth"], // Перелік редюсерів, які потрібно зберегти
 };
 
-const authSlice = createSlice({
-  name: "auth",
-  initialState: {
-    isSignedIn: false,
-    userData: null,
-    token: null,
-    isLoading: false,
-    isError: false,
-  },
-  reducers: {
-    // Додайте додаткові редуктори, якщо потрібно
-  },
-  extraReducers: (builder) =>
-    builder
-      .addCase(apiRegister.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isSignedIn = true;
-        state.userData = action.payload.user;
-        state.token = action.payload.token;
-      })
-      .addCase(apiLogin.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isSignedIn = true;
-        state.userData = action.payload.user;
-        state.token = action.payload.token;
-      })
-      .addCase(apiRefreshUser.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isSignedIn = true;
-        state.userData = action.payload;
-      }),
-});
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-const store = configureStore({
-  reducer: {
-    auth: authSlice.reducer,
-  },
+export const store = configureStore({
+  reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: false, // Вимкнути перевірку для дозволу збереження серіалізованих даних
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
     }),
 });
 
-// Підписка на зміну токена для автоматичного встановлення його в заголовок запиту
-store.subscribe(() => {
-  const token = store.getState().auth.token;
-  if (token) {
-    setToken(token);
-  }
-});
-
-const persistor = persistStore(store);
-
-export { store, persistor };
+export const persistor = persistStore(store);

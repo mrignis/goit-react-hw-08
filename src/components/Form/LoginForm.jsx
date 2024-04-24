@@ -1,5 +1,6 @@
 // LoginForm.jsx
 import React, { useState } from "react";
+import * as Yup from "yup"; // Імпорт Yup для визначення схеми логіну
 
 const LoginForm = ({ onSubmit }) => {
   const [credentials, setCredentials] = useState({
@@ -19,6 +20,16 @@ const LoginForm = ({ onSubmit }) => {
     e.preventDefault();
     onSubmit(credentials);
   };
+
+  // Визначення схеми логіну з використанням Yup
+  const loginUserSchema = Yup.object().shape({
+    email: Yup.string()
+      .required("Email address is required!")
+      .email("You must enter a valid email address!"),
+    password: Yup.string()
+      .required("Password is required!")
+      .min(7, "Your password must be at least 7 characters long!"),
+  });
 
   return (
     <form onSubmit={handleSubmit}>

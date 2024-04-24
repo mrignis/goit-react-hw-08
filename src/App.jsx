@@ -1,7 +1,7 @@
 import React, { useEffect, lazy, Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { apiRefreshUser } from "./redux/auth/slice";
+import { apiRefreshUser } from "./redux/auth/operations";
 
 import Navigation from "./components/Navigation/Navigation";
 
@@ -18,6 +18,7 @@ function App() {
   useEffect(() => {
     dispatch(apiRefreshUser());
   }, [dispatch]);
+
   return (
     <Router>
       <>
