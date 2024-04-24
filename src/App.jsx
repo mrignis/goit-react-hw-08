@@ -1,8 +1,8 @@
 import React, { useEffect, lazy, Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { refreshUser } from "./redux/auth/operations";
-import { selectIsLoggedIn } from "./redux/auth/selectors";
+import { apiRefreshUser } from "./redux/auth/slice";
+
 import Navigation from "./components/Navigation/Navigation";
 
 const HomePage = lazy(() => import("./pages/HomePage/HomePage"));
@@ -14,12 +14,10 @@ const ContactsPage = lazy(() => import("./pages/ContactsPage/ContactsPage"));
 
 function App() {
   const dispatch = useDispatch();
-  const isLoggedIn = useSelector(selectIsLoggedIn);
 
   useEffect(() => {
-    dispatch(refreshUser());
+    dispatch(apiRefreshUser());
   }, [dispatch]);
-
   return (
     <Router>
       <>
