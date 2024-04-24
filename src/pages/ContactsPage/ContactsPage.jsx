@@ -5,7 +5,7 @@ import Contact from "../../components/Contact/Contact";
 import ContactList from "../../components/ContactList/ContactList";
 import { fetchContacts } from "../../redux/contacts/operations";
 import { selectIsLoading, selectError } from "../../redux/contacts/selectors";
-i
+
 function ContactsPage() {
   const dispatch = useDispatch();
   const isLoading = useSelector(selectIsLoading);

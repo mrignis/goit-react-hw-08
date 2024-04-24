@@ -1,24 +1,63 @@
-// LoginPage.jsx
-import React from "react";
-import LoginForm from "../../components/Form/LoginForm";
-import { useDispatch, useSelector } from "react-redux";
-import { login } from "../../redux/auth/operations";
+import { ErrorMessage, Field, Form, Formik } from "formik";
+import * as Yup from "yup";
+import { MIN_CHAR_PASSWORD_VALIDATION } from "../../utils/constans";
+import { useDispatch } from "react-redux";
+import { apiLogin } from "../../redux/auth/slice";
+
+const loginUserSchema = Yup.object().shape({
+  email: Yup.string()
+    .required("Email address is required!")
+    .email("You must enter valid email address!"),
+  password: Yup.string()
+    .required("Password is required!")
+    .min(
+      MIN_CHAR_PASSWORD_VALIDATION,
+      `Your password must be greater than ${MIN_CHAR_PASSWORD_VALIDATION} characters!`
+    ),
+});
+
+const FORM_INITIAL_VALUES = {
+  email: "",
+  password: "",
+};
 
 const LoginPage = () => {
   const dispatch = useDispatch();
-  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
-
-  const handleSubmit = (formData) => {
-    dispatch(login(formData));
+  const handleSubmit = (values, actions) => {
+    dispatch(apiLogin(values));
+    actions.resetForm();
   };
 
   return (
     <div>
-      {isLoggedIn ? (
-        <div>You are already logged in. Proceed to contacts.</div>
-      ) : (
-        <LoginForm onSubmit={handleSubmit} />
-      )}
+      <Formik
+        initialValues={FORM_INITIAL_VALUES}
+        validationSchema={loginUserSchema}
+        onSubmit={handleSubmit}
+      >
+        <Form>
+          <h2>Login user</h2>
+          <label>
+            <span>Email:</span>
+            <br />
+            <Field type="email" name="email" placeholder="Enter your email" />
+            <ErrorMessage component="p" name="email" />
+          </label>{" "}
+          <br />
+          <label>
+            <span>Password:</span>
+            <br />
+            <Field
+              type="password"
+              name="password"
+              placeholder="Enter your password"
+            />
+            <ErrorMessage component="p" name="password" />
+          </label>
+          <br />
+          <button type="submit">▶ Create new user</button>
+        </Form>
+      </Formik>
     </div>
   );
 };
