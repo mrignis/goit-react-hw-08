@@ -1,3 +1,4 @@
+// c:/Users/chelb/Documents/GitHub/goit-react-hw-08/src/redux/auth/operations.js
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 

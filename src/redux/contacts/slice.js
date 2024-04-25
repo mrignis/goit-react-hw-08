@@ -1,3 +1,5 @@
+// slice.js
+
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
@@ -66,4 +68,4 @@ export const {
   changeFilter,
 } = contactsSlice.actions;
 
-export const contactsReducer = contactsSlice.reducer;
+export default contactsSlice.reducer; // Змінив експорт
