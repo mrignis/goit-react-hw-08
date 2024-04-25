@@ -3,8 +3,10 @@ import {
   apiRegister,
   apiLogin,
   apiRefreshUser,
-} from "../../redux/auth/operations"; // Імпорт apiRegister
-const INITAL_STATE = {
+  apiLogout,
+} from "../../redux/auth/operations";
+
+const INITIAL_STATE = {
   isSignedIn: false,
   userData: null,
   token: null,
@@ -13,11 +15,9 @@ const INITAL_STATE = {
 };
 
 const authSlice = createSlice({
-  // Ім'я слайсу
   name: "auth",
-  // Початковий стан редюсера слайсу
-  initialState: INITAL_STATE,
-  // Об'єкт редюсерів
+  initialState: INITIAL_STATE,
+  reducers: {},
   extraReducers: (builder) =>
     builder
       .addCase(apiRegister.pending, (state) => {
@@ -62,9 +62,22 @@ const authSlice = createSlice({
       .addCase(apiRefreshUser.rejected, (state) => {
         state.isLoading = false;
         state.isError = true;
+      })
+
+      .addCase(apiLogout.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+      })
+      .addCase(apiLogout.fulfilled, (state) => {
+        state.isLoading = false;
+        state.isSignedIn = false;
+        state.userData = null;
+        state.token = null;
+      })
+      .addCase(apiLogout.rejected, (state) => {
+        state.isLoading = false;
+        state.isError = true;
       }),
 });
 
 export const authReducer = authSlice.reducer;
-const { reducer } = authSlice;
-export default reducer;
