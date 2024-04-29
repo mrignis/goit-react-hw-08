@@ -1,83 +1,65 @@
-import { createSlice } from "@reduxjs/toolkit";
-import {
-  apiRegister,
-  apiLogin,
-  apiRefreshUser,
-  apiLogout,
-} from "../../redux/auth/operations";
+import { createSlice, isAnyOf } from "@reduxjs/toolkit";
+
+import { register, login, refreshUser, logout } from "./operations";
 
 const INITIAL_STATE = {
-  isSignedIn: false,
-  userData: null,
+  user: {
+    name: null,
+    email: null,
+  },
   token: null,
-  isLoading: false,
-  isError: false,
+  isLoggedIn: false,
+  isRefreshing: false,
 };
-
 const authSlice = createSlice({
   name: "auth",
   initialState: INITIAL_STATE,
-  reducers: {},
   extraReducers: (builder) =>
     builder
-      .addCase(apiRegister.pending, (state) => {
-        state.isLoading = true;
-        state.isError = false;
-      })
-      .addCase(apiRegister.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isSignedIn = true;
-        state.userData = action.payload.user;
+      .addCase(register.fulfilled, (state, action) => {
+        // state.isLoading = false;
+        state.isLoggedIn = true;
+        state.user = action.payload.user;
         state.token = action.payload.token;
       })
-      .addCase(apiRegister.rejected, (state) => {
-        state.isLoading = false;
-        state.isError = true;
-      })
-
-      .addCase(apiLogin.pending, (state) => {
-        state.isLoading = true;
-        state.isError = false;
-      })
-      .addCase(apiLogin.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isSignedIn = true;
-        state.userData = action.payload.user;
+      .addCase(login.fulfilled, (state, action) => {
+        // state.isLoading = false;
+        state.isLoggedIn = true;
+        state.user = action.payload.user;
         state.token = action.payload.token;
       })
-      .addCase(apiLogin.rejected, (state) => {
-        state.isLoading = false;
-        state.isError = true;
+      .addCase(refreshUser.fulfilled, (state, action) => {
+        state.isLoggedIn = true;
+        state.user = action.payload;
       })
-
-      .addCase(apiRefreshUser.pending, (state) => {
-        state.isLoading = true;
-        state.isError = false;
+      .addCase(logout.fulfilled, () => {
+        return INITIAL_STATE;
       })
-      .addCase(apiRefreshUser.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.isSignedIn = true;
-        state.userData = action.payload;
-      })
-      .addCase(apiRefreshUser.rejected, (state) => {
-        state.isLoading = false;
-        state.isError = true;
-      })
-
-      .addCase(apiLogout.pending, (state) => {
-        state.isLoading = true;
-        state.isError = false;
-      })
-      .addCase(apiLogout.fulfilled, (state) => {
-        state.isLoading = false;
-        state.isSignedIn = false;
-        state.userData = null;
-        state.token = null;
-      })
-      .addCase(apiLogout.rejected, (state) => {
-        state.isLoading = false;
-        state.isError = true;
-      }),
+      // Fix the syntax error by removing the extra comma here
+      .addMatcher(
+        isAnyOf(
+          register.pending,
+          login.pending,
+          refreshUser.pending,
+          logout.pending
+        ),
+        (state) => {
+          state.isLoading = true;
+          state.isError = false;
+        }
+      )
+      .addMatcher(
+        isAnyOf(
+          register.rejected,
+          login.rejected,
+          refreshUser.rejected,
+          logout.rejected
+        ),
+        (state) => {
+          state.isLoading = false;
+          state.isError = true;
+        }
+      ),
 });
 
 export const authReducer = authSlice.reducer;

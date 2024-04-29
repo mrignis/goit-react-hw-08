@@ -1,50 +1,40 @@
-import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Audio } from "react-loader-spinner";
+import { selectFilteredContacts } from "../../redux/contacts/slice";
+import { isError, isLoading } from "../../redux/contacts/selectors";
 import ContactForm from "../../components/ContactForm/ContactForm";
-import ContactList from "../../components/ContactList/ContactList";
-import { fetchContacts } from "../../redux/contacts/operations";
-import { selectIsLoading, selectError } from "../../redux/contacts/selectors";
-import { contactsSlice } from "../../redux/contacts/slice";
+import SearchBox from "../../components/SearchBox/SearchBox";
+import Contact from "../../components/Contact/Contact";
+import Loader from "../../components/Loader/Loader";
+import ErrorMessenger from "../../components/ErrorMessenger/ErrorMessenger";
 
-function ContactsPage() {
+import clsx from "clsx";
+
+import { useEffect } from "react";
+import { fetchContacts } from "../../redux/contacts/operations";
+
+const ContactList = () => {
   const dispatch = useDispatch();
-  const isLoading = useSelector(selectIsLoading);
-  const error = useSelector(selectError);
+  const loading = useSelector(isLoading);
+  const errorMessenger = useSelector(isError);
+  const filteredContacts = useSelector(selectFilteredContacts);
 
   useEffect(() => {
     dispatch(fetchContacts());
   }, [dispatch]);
-
   return (
-    <div>
-      <h1>Сторінка контактів</h1>
+    <>
       <ContactForm />
-      <h2>Contacts</h2>
-      {isLoading && !error ? (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            marginTop: "20px",
-          }}
-        >
-          <Audio
-            height={80}
-            width={80}
-            radius={9}
-            color="green"
-            ariaLabel="loading"
-            wrapperStyle={{}}
-            wrapperClass=""
-          />
-        </div>
-      ) : (
-        <ContactList />
-      )}
-    </div>
+      <SearchBox />
+      {loading && <Loader />}
+      {errorMessenger && <ErrorMessenger />}
+      <ul className={clsx(css.contactsList)}>
+        {Array.isArray(filteredContacts) &&
+          filteredContacts.map((contact) => {
+            return <Contact key={contact.id} contact={contact} />;
+          })}
+      </ul>
+    </>
   );
-}
+};
 
-export default ContactsPage;
+export default ContactList;

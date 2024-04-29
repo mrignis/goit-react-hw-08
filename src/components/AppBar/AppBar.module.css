@@ -1,0 +1,46 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #d3c3c3;
+    /* Фоновий колір */
+    color: #fff;
+    /* Колір тексту */
+    box-shadow: 0px 2px 4px rgba(190, 157, 157, 0.1);
+    /* Тінь */
+    margin-bottom:15px ;
+}
+
+.authContainer {
+    display: flex;
+    align-items: center;
+}
+
+.authContainer>* {
+    margin-left: 10px;
+    /* Проміжок між елементами */
+}
+
+.authContainer> :first-child {
+    margin-left: 0;
+    /* Відсутність відступу зліва для першого елемента */
+}
+
+.userMenuButton {
+    background-color: transparent;
+    /* Прозорий фон */
+    border: none;
+    /* Відсутність рамки */
+    color: #fff;
+    /* Колір тексту */
+    cursor: pointer;
+    /* Зміна курсору при наведенні */
+    font-size: 16px;
+    /* Розмір тексту */
+}
+
+.userMenuButton:hover {
+    text-decoration: underline;
+    /* Підкреслення тексту при наведенні */
+}
